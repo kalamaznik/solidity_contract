@@ -1,0 +1,62 @@
+// SPDX-License-Identifier: GPL-3.0
+
+pragma solidity >=0.7.0 <0.8.0;
+pragma experimental ABIEncoderV2;
+/**
+ * @title Storage
+ * @dev Store & retrieve value in a variable
+ */
+contract Storage {
+
+    struct Car {
+        string model;
+        uint stateNumber;
+    }
+
+    Car [] private cars;
+
+    string public message;
+    uint256 number;
+    address owner;
+    
+    constructor() {
+        owner = msg.sender;
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+    /**
+     * @dev Store value in variable
+     * @param num value to store
+     */
+    function store(uint256 num) public onlyOwner {
+        number = num;
+    }
+
+    /**
+     * @dev Return value 
+     * @return value of 'number'
+     */
+    function retrieve() public view returns (uint256){
+        return number;
+    }
+
+    function setMessage(string memory newMessage) public {
+        message = newMessage;
+    }
+
+    function getMessage()public view returns (string memory) {
+        return message;
+    }
+    
+    function createRandomCar(uint _govNumber, string calldata _model) external {
+        cars.push(Car(_model, _govNumber));
+    }
+    
+    function retrieveRandomCar(uint _ind) public view returns (Car memory) {
+        require(cars.length > _ind);
+        return cars[_ind];
+    }
+}
